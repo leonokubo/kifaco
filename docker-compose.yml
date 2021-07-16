@@ -1,0 +1,20 @@
+version: '3.5'
+services:
+
+  redis:
+    container_name: 'redis'
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_PASSWORD=123456
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - "6479:6379"
+  db:
+    container_name: mysql
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - ./.docker/mysql:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
