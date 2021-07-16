@@ -1,11 +1,12 @@
 from sqlalchemy import BIGINT
-from sqlalchemy import Column, Integer, VARCHAR, ForeignKey
+from sqlalchemy import Column, Integer, VARCHAR, ForeignKey, SMALLINT
 from sqlalchemy.orm import object_session
 from sqlalchemy.orm import relationship
 
 from kifaco.domain.entity import Entity
 from kifaco.domain.entity.diet import Diet
 from kifaco.domain.entity.menu import Menu
+from kifaco.domain.entity.household_appliance import HouseholdAppliance
 
 
 class UserMenu(Entity):
@@ -14,6 +15,14 @@ class UserMenu(Entity):
     user: str = Column(BIGINT)
     menu: int = Column(BIGINT, ForeignKey(Menu.id))
     relation_menu = relationship(Menu)
+
+
+class UserHouseholdAppliance(Entity):
+    __tablename__ = "user_x_household_appliance"
+    id: int = Column(BIGINT, primary_key=True, autoincrement=True)
+    user: int = Column(BIGINT)
+    household_appliance: int = Column(SMALLINT, ForeignKey(HouseholdAppliance.id))
+    relation_household_appliance = relationship(HouseholdAppliance)
 
 
 class User(Entity):
@@ -32,4 +41,13 @@ class User(Entity):
             .join(Menu) \
             .with_entities(Menu) \
             .filter(UserMenu.user == self.id) \
+            .all()
+
+    @property
+    def household_appliance(self):
+        return object_session(self) \
+            .query(UserHouseholdAppliance) \
+            .join(HouseholdAppliance) \
+            .with_entities(HouseholdAppliance) \
+            .filter(UserHouseholdAppliance.user == self.id) \
             .all()
