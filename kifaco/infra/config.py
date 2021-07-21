@@ -19,7 +19,7 @@ class Conn:
         pool_recycle=Config.DATABASE_POOL_RECYCLE,
         pool_size=Config.DATABASE_POOL_SIZE,
         pool_pre_ping=True,
-        max_overflow=1,
+        max_overflow=10,
         pool_timeout=10
     )
     session = scoped_session(
