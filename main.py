@@ -13,4 +13,4 @@ def handle_after_request(response: Response):
 
 @app.errorhandler(Exception)
 def handle_app_general_exception(error: Exception):
-    ...
+    return str(error)

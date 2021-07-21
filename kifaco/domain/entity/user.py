@@ -52,6 +52,10 @@ class User(Entity):
             .filter(UserHouseholdAppliance.user == self.id) \
             .all()
 
+    @property
+    def password(self):
+        raise PermissionError("PermissionError")
+
     def to_json(self):
         return {
             "name": self.name,
