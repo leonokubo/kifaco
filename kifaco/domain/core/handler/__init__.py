@@ -3,9 +3,11 @@ from typing import Union
 from flask.views import MethodView
 
 from kifaco.domain.entity import Entity
+from kifaco.infra.repository import Repository
 
 
 class HandlerABC(MethodView):
+    repository: Repository
 
     @staticmethod
     def __prepare(value):
@@ -30,3 +32,11 @@ class HandlerABC(MethodView):
                 response.update({k: self.__prepare(v)})
 
         return {"data": response, "code": code}, code
+
+    def get(self, **kwargs):
+        key = self.__class__.__name__.lower()
+        data = {key: self.repository.get(kwargs.get("id"))}
+        for _, v in enumerate(kwargs.values()):
+            data.update({v: getattr(data[key], v)}) if hasattr(data[key], v) else ...
+
+        return self.response(data, 202)
