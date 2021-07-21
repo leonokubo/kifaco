@@ -5,8 +5,8 @@ from sqlalchemy.orm import relationship
 
 from kifaco.domain.entity import Entity
 from kifaco.domain.entity.diet import Diet
-from kifaco.domain.entity.menu import Menu
 from kifaco.domain.entity.household_appliance import HouseholdAppliance
+from kifaco.domain.entity.menu import Menu
 
 
 class UserMenu(Entity):
@@ -51,3 +51,9 @@ class User(Entity):
             .with_entities(HouseholdAppliance) \
             .filter(UserHouseholdAppliance.user == self.id) \
             .all()
+
+    def to_json(self):
+        return {
+            "name": self.name,
+            "diet": self.relation_diet.kind,
+        }

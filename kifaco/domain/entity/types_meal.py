@@ -7,3 +7,9 @@ class TypesMeal(Entity):
     __tablename__ = "types_meal"
     id: int = Column(Integer(), primary_key=True, autoincrement=True)
     meal: str = Column(VARCHAR(100))
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "meal": self.meal
+        }

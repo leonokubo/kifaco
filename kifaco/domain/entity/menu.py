@@ -42,3 +42,12 @@ class Menu(Entity):
             .with_entities(Ingredients.ingredients, Ingredients.kind) \
             .filter(MenuIngredients.menu == self.id) \
             .all()
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "plate": self.plate,
+            "calorie": self.calorie,
+            "time": str(self.time),
+            "complement": self.complement,
+        }

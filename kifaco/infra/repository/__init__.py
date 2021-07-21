@@ -8,3 +8,6 @@ class Repository:
     @property
     def db_set(self):
         return Conn().session.query(self.entity)
+
+    def get(self, _id):
+        return self.db_set.get(_id)
