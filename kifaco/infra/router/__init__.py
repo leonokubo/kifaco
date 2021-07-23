@@ -1,19 +1,17 @@
-from flask import Blueprint
+from kifaco.infra.router.customer import CustomerRouter
+from kifaco.infra.router.menu import MenuRouter
+from kifaco.infra.router.router import Router
 
-from kifaco.handler.v1.user import User
+__all__ = [CustomerRouter, MenuRouter]
 
-routes_blueprint = Blueprint("routes_blueprint", __name__)
 
-"""Customer"""
-routes_blueprint.add_url_rule(
-    "/v1/customer/<id>",
-    view_func=User.as_view("customer"), methods=["GET"])
-routes_blueprint.add_url_rule(
-    "/v1/customer/<id>/<p1>",
-    view_func=User.as_view("customer_1"), methods=["GET"])
-routes_blueprint.add_url_rule(
-    "/v1/customer/<id>/<p1>/<p2>",
-    view_func=User.as_view("customer_2"), methods=["GET"])
-routes_blueprint.add_url_rule(
-    "/v1/customer/<id>/<p1>/<p2>/<p3>",
-    view_func=User.as_view("customer_3"), methods=["GET"])
+class FactoryRouter(object):
+    routes_blueprint = Router
+
+    def __init__(self):
+        for klass in Router.__subclasses__():
+            klass.routes_blueprint(self.routes_blueprint.blueprint)
+
+    @property
+    def blueprint(self):
+        return self.routes_blueprint.blueprint

@@ -1,5 +1,7 @@
+from enum import Enum
 from typing import Union
 
+from flask import request
 from flask.views import MethodView
 
 from kifaco.domain.entity import Entity
@@ -19,6 +21,10 @@ class HandlerABC(MethodView):
             for v in value:
                 if isinstance(v, Entity):
                     response.append(v.to_json())
+                elif hasattr(v, "_asdict"):
+                    response.append(
+                        {k: v.name if isinstance(v, Enum) else v for k, v in v._asdict().items()}
+                    )
 
         return response
 
@@ -40,3 +46,13 @@ class HandlerABC(MethodView):
             data.update({v: getattr(data[key], v)}) if hasattr(data[key], v) else ...
 
         return self.response(data, 202)
+
+    def put(self, **kwargs):
+        data = self.repository.get(kwargs.get("id"))
+        if data:
+            for k, v in request.json.items():
+                if hasattr(data, k):
+                    setattr(data, k, v)
+            self.repository.commit()
+
+        return self.response({}, 202)

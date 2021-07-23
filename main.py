@@ -1,9 +1,9 @@
 from flask import Flask, Response
 
-from kifaco.infra.router import routes_blueprint
+from kifaco.infra.router import FactoryRouter
 
 app = Flask(__name__)
-app.register_blueprint(routes_blueprint)
+app.register_blueprint(FactoryRouter().blueprint)
 
 
 @app.after_request
